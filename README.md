@@ -4,6 +4,7 @@ A React.js frontend application for asteroid impact simulation, built with NASA'
 
 ## 🚀 Features
 
+
 ### Core Modules
 - **Main Dashboard**: 3D Solar System viewer with real-time NEO threat indicators
 - **Simulation Interface**: Interactive asteroid parameter controls and impact location selection
