@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useReducer, useEffect } from 'react';
+import React, { createContext, useContext, useReducer, useEffect, useState } from 'react';
 
 const AppContext = createContext();
 
@@ -19,7 +19,8 @@ const initialState = {
   userPreferences: {
     units: 'metric',
     notifications: true
-  }
+  },
+  impactData: null // Added impactData to initial state
 };
 
 function appReducer(state, action) {
@@ -33,14 +34,16 @@ function appReducer(state, action) {
     case 'SELECT_ASTEROID':
       return { ...state, selectedAsteroid: action.payload };
     case 'UPDATE_SIMULATION_PARAMS':
-      return { 
-        ...state, 
+      return {
+        ...state,
         simulationParams: { ...state.simulationParams, ...action.payload }
       };
     case 'SET_SIMULATION_RESULTS':
       return { ...state, simulationResults: action.payload };
     case 'SET_THREAT_LEVEL':
       return { ...state, threatLevel: action.payload };
+    case 'SET_IMPACT_DATA': // New case for impact data
+      return { ...state, impactData: action.payload };
     case 'UPDATE_USER_PREFERENCES':
       return {
         ...state,

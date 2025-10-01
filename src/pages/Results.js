@@ -6,9 +6,71 @@ import PopulationMetrics from '../components/results/PopulationMetrics';
 import TsunamiMetrics from '../components/results/TsunamiMetrics';
 import BlastRadiusMetrics from '../components/results/BlastRadiusMetrics';
 import EarthVisualization from '../components/3d/EarthVisualization';
+import { useAppContext } from '../context/AppContext';
+import { useNavigate } from 'react-router-dom';
+import { jsPDF } from 'jspdf'; // Import jsPDF
 import './Results.scss';
 
 function Results() {
+  const { state } = useAppContext();
+  const { impactData } = state;
+  const navigate = useNavigate();
+
+  const handleNewSimulationClick = () => {
+    navigate('/dashboard');
+  };
+
+  const handleDownloadReportClick = () => {
+    if (!impactData) {
+      alert("No impact data available to download.");
+      return;
+    }
+
+    const doc = new jsPDF();
+    let yOffset = 20;
+
+    doc.setFontSize(22);
+    doc.text("Asteroid Impact Report", 105, yOffset, null, null, "center");
+    yOffset += 10;
+    doc.setFontSize(12);
+    doc.text(`Date: ${new Date().toLocaleDateString()}`, 105, yOffset, null, null, "center");
+    yOffset += 20;
+
+    doc.setFontSize(16);
+    doc.text("Impact Parameters:", 20, yOffset);
+    yOffset += 10;
+    doc.setFontSize(12);
+    doc.text(`Asteroid Diameter: ${impactData.asteroidDiameter} km`, 20, yOffset);
+    yOffset += 7;
+    doc.text(`Impact Energy: ${impactData.energy} megatons TNT`, 20, yOffset);
+    yOffset += 7;
+    doc.text(`Blast Radius: ${impactData.blastRadius} km`, 20, yOffset);
+    yOffset += 7;
+    doc.text(`Impact Location: Lat ${impactData.latitude?.toFixed(2)}, Lng ${impactData.longitude?.toFixed(2)}`, 20, yOffset);
+    yOffset += 10;
+
+    doc.setFontSize(16);
+    doc.text("Population Impact:", 20, yOffset);
+    yOffset += 10;
+    doc.setFontSize(12);
+    doc.text(`Affected Population: ${impactData.affectedPopulation}`, 20, yOffset);
+    yOffset += 7;
+    doc.text(`Casualties: ${impactData.casualties}`, 20, yOffset);
+    yOffset += 7;
+    doc.text(`Direct Impact: ${impactData.populationBreakdown?.directImpact?.toLocaleString() || 'N/A'}`, 20, yOffset);
+    yOffset += 7;
+    doc.text(`Secondary Effects: ${impactData.populationBreakdown?.secondary?.toLocaleString() || 'N/A'}`, 20, yOffset);
+    yOffset += 7;
+    doc.text(`Long Term Effects: ${impactData.populationBreakdown?.longTerm?.toLocaleString() || 'N/A'}`, 20, yOffset);
+    yOffset += 7;
+    doc.text(`Total Affected: ${impactData.populationBreakdown?.totalAffected?.toLocaleString() || 'N/A'}`, 20, yOffset);
+    yOffset += 10;
+
+    // Add more details as needed
+
+    doc.save('asteroid_impact_report.pdf');
+  };
+
   return (
     <div className="results">
       {/* Header Section */}
@@ -20,17 +82,17 @@ function Results() {
               <p className="results-subtitle">
                 Detailed impact simulation results for a 250m object at 19.3 km/s
               </p>
-              
+
               <div className="impact-location">
                 <span className="location-label">Impact Location:</span>
                 <span className="location-value">Asteroid Ocean at FL 69,047 W</span>
               </div>
 
               <div className="action-buttons">
-                <button className="btn btn--primary">
+                <button className="btn btn--primary" onClick={handleNewSimulationClick}>
                   📥 New Simulation
                 </button>
-                <button className="btn btn--secondary">
+                <button className="btn btn--secondary" onClick={handleDownloadReportClick}>
                   📊 Download Report
                 </button>
               </div>
@@ -38,7 +100,7 @@ function Results() {
 
             <div className="header-visual">
               <Suspense fallback={<div className="loading-spinner"></div>}>
-                <EarthVisualization />
+                <EarthVisualization impactData={impactData} /> {/* Pass impactData to EarthVisualization */}
               </Suspense>
             </div>
           </div>
@@ -76,7 +138,7 @@ function Results() {
               Customize asteroid parameters, impact location and more to see different scenarios and
               outcomes.
             </p>
-            <button className="btn btn--primary btn--large">
+            <button className="btn btn--primary btn--large" onClick={handleNewSimulationClick}>
               New Simulation →
             </button>
           </div>
@@ -98,7 +160,7 @@ function Results() {
                 education.
               </p>
             </div>
-            
+
             <div className="footer-nav">
               <h4>Navigation</h4>
               <ul>
@@ -108,7 +170,7 @@ function Results() {
                 <li><a href="/results">Impact Results</a></li>
               </ul>
             </div>
-            
+
             <div className="footer-sources">
               <h4>Data Sources</h4>
               <ul>
@@ -118,7 +180,7 @@ function Results() {
               </ul>
             </div>
           </div>
-          
+
           <div className="footer-bottom">
             <p>© 2025 Impact Explorer 2025. All rights reserved.</p>
             <p>Powered by NASA data. This is a simulation tool for educational purposes.</p>

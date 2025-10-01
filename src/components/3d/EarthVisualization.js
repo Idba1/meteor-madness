@@ -1,100 +1,27 @@
 import React, { useRef, useState, useMemo } from 'react';
-import { Canvas, useFrame } from '@react-three/fiber';
+import { Canvas, useFrame, useLoader } from '@react-three/fiber';
 import { OrbitControls, Sphere, Line } from '@react-three/drei';
 import * as THREE from 'three';
+import { TextureLoader } from 'three';
 
-function Earth() {
+// Import textures
+import earth_bump from '../../assets/textures/earth_bump.jpg';
+import earth_cloud from '../../assets/textures/earth_cloud.png';
+import earth_lights from '../../assets/textures/earth_lights.jpg';
+import earth_spec from '../../assets/textures/earth_spec.jpg';
+import craterTexture from '../../assets/textures/crater.png';
+
+function Earth({ impactData }) {
   const earthRef = useRef();
   const atmosphereRef = useRef();
   const cloudsRef = useRef();
+  const impactMeshRef = useRef();
 
-  // Create realistic Earth textures
-  const earthTexture = useMemo(() => {
-    const canvas = document.createElement('canvas');
-    canvas.width = 2048;
-    canvas.height = 1024;
-    const ctx = canvas.getContext('2d');
-    
-    // Create realistic Earth texture with continents and oceans
-    // Ocean base
-    const oceanGradient = ctx.createRadialGradient(1024, 512, 0, 1024, 512, 1024);
-    oceanGradient.addColorStop(0, '#1e40af');
-    oceanGradient.addColorStop(0.5, '#1e3a8a'); 
-    oceanGradient.addColorStop(1, '#0f172a');
-    ctx.fillStyle = oceanGradient;
-    ctx.fillRect(0, 0, 2048, 1024);
-    
-    // Add continents (simplified shapes for Africa, Europe, Asia)
-    ctx.fillStyle = '#16a34a'; // Green for land
-    
-    // Africa
-    ctx.beginPath();
-    ctx.ellipse(1100, 600, 150, 200, 0, 0, 2 * Math.PI);
-    ctx.fill();
-    
-    // Europe
-    ctx.beginPath();
-    ctx.ellipse(1050, 300, 80, 60, 0, 0, 2 * Math.PI);
-    ctx.fill();
-    
-    // Asia
-    ctx.beginPath();
-    ctx.ellipse(1400, 400, 200, 150, 0, 0, 2 * Math.PI);
-    ctx.fill();
-    
-    // North America
-    ctx.beginPath();
-    ctx.ellipse(400, 350, 180, 120, 0, 0, 2 * Math.PI);
-    ctx.fill();
-    
-    // South America  
-    ctx.beginPath();
-    ctx.ellipse(500, 650, 80, 150, 0, 0, 2 * Math.PI);
-    ctx.fill();
-    
-    // Australia
-    ctx.beginPath();
-    ctx.ellipse(1600, 750, 100, 60, 0, 0, 2 * Math.PI);
-    ctx.fill();
-    
-    // Add some brown/desert areas
-    ctx.fillStyle = '#ca8a04';
-    ctx.beginPath();
-    ctx.ellipse(1000, 450, 100, 60, 0, 0, 2 * Math.PI);
-    ctx.fill();
-    
-    ctx.beginPath();
-    ctx.ellipse(1200, 700, 80, 40, 0, 0, 2 * Math.PI);
-    ctx.fill();
-    
-    return new THREE.CanvasTexture(canvas);
-  }, []);
-
-  // Create cloud texture
-  const cloudTexture = useMemo(() => {
-    const canvas = document.createElement('canvas');
-    canvas.width = 1024;
-    canvas.height = 512;
-    const ctx = canvas.getContext('2d');
-    
-    // Transparent background
-    ctx.clearRect(0, 0, 1024, 512);
-    
-    // Add cloud patterns
-    ctx.fillStyle = 'rgba(255, 255, 255, 0.6)';
-    
-    for (let i = 0; i < 20; i++) {
-      const x = Math.random() * 1024;
-      const y = Math.random() * 512;
-      const radius = Math.random() * 50 + 20;
-      
-      ctx.beginPath();
-      ctx.arc(x, y, radius, 0, 2 * Math.PI);
-      ctx.fill();
-    }
-    
-    return new THREE.CanvasTexture(canvas);
-  }, []);
+  // Load textures
+  const [bumpMap, cloudMap, lightsMap, specMap, craterMap] = useLoader(
+    TextureLoader,
+    [earth_bump, earth_cloud, earth_lights, earth_spec, craterTexture]
+  );
 
   useFrame((state) => {
     if (earthRef.current) {
@@ -106,40 +33,85 @@ function Earth() {
     if (atmosphereRef.current) {
       atmosphereRef.current.rotation.y += 0.001; // Very slow atmospheric rotation
     }
+
+    if (impactData && impactMeshRef.current) {
+      // Rotate impact mesh with earth
+      impactMeshRef.current.rotation.y = earthRef.current.rotation.y;
+    }
   });
+
+  const earthRadius = 2;
+  let impactPosition = null;
+  let impactScale = [0, 0, 0];
+
+  if (impactData) {
+    const latitude = impactData.latitude;
+    const longitude = impactData.longitude;
+    const blastRadius = parseFloat(impactData.blastRadius) || 0;
+
+    // Convert lat/lon to 3D Cartesian coordinates
+    const latRad = latitude * (Math.PI / 180);
+    const lonRad = -longitude * (Math.PI / 180); // Negative for Three.js coordinate system
+
+    const x = earthRadius * Math.cos(latRad) * Math.cos(lonRad);
+    const y = earthRadius * Math.sin(latRad);
+    const z = earthRadius * Math.cos(latRad) * Math.sin(lonRad);
+    impactPosition = new THREE.Vector3(x, y, z);
+
+    // Scale impact effect based on blast radius
+    const baseImpactSize = 0.1; // A base size for the crater
+    const scaleFactor = blastRadius / 100; // Adjust as needed
+    const impactSize = baseImpactSize + scaleFactor;
+    impactScale = [impactSize, impactSize, 1]; // Z-scale can be adjusted for depth
+  }
 
   return (
     <group>
       {/* Earth surface */}
-      <Sphere ref={earthRef} args={[2, 64, 64]}>
-        <meshPhongMaterial 
-          map={earthTexture} 
-          shininess={1}
-          specular="#004080"
-          bumpScale={0.1}
+      <Sphere ref={earthRef} args={[earthRadius, 64, 64]}>
+        <meshPhongMaterial
+          map={new THREE.TextureLoader().load('/assets/textures/earth_lights.jpg')} // Base color map
+          bumpMap={bumpMap}
+          bumpScale={0.05} // Adjust bumpiness
+          specularMap={specMap}
+          specular="#555555"
+          shininess={10}
         />
       </Sphere>
-      
+
       {/* Cloud layer */}
-      <Sphere ref={cloudsRef} args={[2.02, 32, 32]}>
-        <meshLambertMaterial 
-          map={cloudTexture} 
-          transparent 
+      <Sphere ref={cloudsRef} args={[earthRadius * 1.01, 32, 32]}>
+        <meshLambertMaterial
+          map={cloudMap}
+          transparent
           opacity={0.6}
           depthWrite={false}
         />
       </Sphere>
-      
+
       {/* Atmospheric glow */}
-      <Sphere ref={atmosphereRef} args={[2.1, 32, 32]}>
-        <meshBasicMaterial 
-          color="#87ceeb" 
-          transparent 
+      <Sphere ref={atmosphereRef} args={[earthRadius * 1.05, 32, 32]}>
+        <meshBasicMaterial
+          color="#87ceeb"
+          transparent
           opacity={0.15}
           side={THREE.BackSide}
           depthWrite={false}
         />
       </Sphere>
+
+      {/* Impact Crater/Mark */}
+      {impactPosition && (
+        <mesh ref={impactMeshRef} position={impactPosition} scale={impactScale}>
+          <planeGeometry args={[1, 1]} /> {/* A plane for the crater texture */}
+          <meshBasicMaterial
+            map={craterMap}
+            transparent
+            opacity={0.9}
+            depthWrite={false}
+          />
+        </mesh>
+      )}
     </group>
   );
 }
@@ -157,7 +129,7 @@ function Asteroid() {
       asteroidRef.current.position.x = Math.cos(time * speed) * radius;
       asteroidRef.current.position.z = Math.sin(time * speed) * radius;
       asteroidRef.current.position.y = Math.sin(time * speed * 0.5) * 2;
-      
+
       // Rotation
       asteroidRef.current.rotation.x += 0.01;
       asteroidRef.current.rotation.y += 0.02;
@@ -198,7 +170,7 @@ function TrajectoryLine() {
 
 function Starfield() {
   const starsRef = useRef();
-  
+
   const starPositions = useMemo(() => {
     const positions = [];
     for (let i = 0; i < 2000; i++) {
@@ -206,16 +178,16 @@ function Starfield() {
       const radius = 100 + Math.random() * 100;
       const theta = Math.random() * Math.PI * 2;
       const phi = Math.random() * Math.PI;
-      
+
       const x = radius * Math.sin(phi) * Math.cos(theta);
       const y = radius * Math.sin(phi) * Math.sin(theta);
       const z = radius * Math.cos(phi);
-      
+
       positions.push(x, y, z);
     }
     return new Float32Array(positions);
   }, []);
-  
+
   useFrame((state) => {
     if (starsRef.current) {
       starsRef.current.rotation.y += 0.0002;
@@ -232,9 +204,9 @@ function Starfield() {
           itemSize={3}
         />
       </bufferGeometry>
-      <pointsMaterial 
-        size={0.5} 
-        sizeAttenuation={true} 
+      <pointsMaterial
+        size={0.5}
+        sizeAttenuation={true}
         color="#ffffff"
         transparent
         opacity={0.8}
@@ -243,7 +215,7 @@ function Starfield() {
   );
 }
 
-function EarthVisualization() {
+function EarthVisualization({ impactData }) {
   return (
     <div style={{ width: '100%', height: '100%', position: 'relative' }}>
       <Canvas
@@ -253,18 +225,18 @@ function EarthVisualization() {
       >
         {/* Lighting setup for realistic Earth */}
         <ambientLight intensity={0.15} color="#404080" />
-        <directionalLight 
-          position={[10, 0, 5]} 
-          intensity={1.2} 
+        <directionalLight
+          position={[10, 0, 5]}
+          intensity={1.2}
           color="#ffffff"
           castShadow
         />
-        <pointLight 
-          position={[-10, -10, -10]} 
-          intensity={0.3} 
-          color="#4040ff" 
+        <pointLight
+          position={[-10, -10, -10]}
+          intensity={0.3}
+          color="#4040ff"
         />
-        
+
         {/* Space background */}
         <mesh>
           <sphereGeometry args={[200, 32, 32]} />
@@ -275,14 +247,14 @@ function EarthVisualization() {
             opacity={1}
           />
         </mesh>
-        
+
         {/* Starfield */}
         <Starfield />
-        
-        <Earth />
+
+        <Earth impactData={impactData} /> {/* Pass impactData to Earth component */}
         <Asteroid />
         <TrajectoryLine />
-        
+
         <OrbitControls
           enablePan={false}
           enableZoom={true}
@@ -295,7 +267,7 @@ function EarthVisualization() {
           minPolarAngle={Math.PI * 0.2}
         />
       </Canvas>
-      
+
       {/* Impact point indicator */}
       <div style={{
         position: 'absolute',
@@ -320,10 +292,10 @@ function EarthVisualization() {
             boxShadow: '0 0 10px #ff6b35',
             animation: 'pulse 2s infinite'
           }}></div>
-          IMPACT ZONE: Pacific Ocean
+          IMPACT ZONE: {impactData?.latitude ? `Lat ${impactData.latitude.toFixed(2)}, Lng ${impactData.longitude.toFixed(2)}` : 'Pacific Ocean'}
         </div>
       </div>
-      
+
       <style>
         {`
           @keyframes pulse {
