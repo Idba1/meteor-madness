@@ -69,6 +69,11 @@ function Results() {
     doc.save('asteroid_impact_report.pdf');
   };
 
+  const energyValue = impactData ? parseFloat(impactData.energy).toFixed(1) : 0;
+  const blastRadiusValue = impactData ? parseFloat(impactData.blastRadius).toFixed(1) : 0;
+  const populationAffectedValue = impactData ? (parseFloat(impactData.affectedPopulation.replace(/,/g, '')) / 1000).toFixed(0) : 0;
+  const tsunamiHeightValue = impactData ? 86.3 : 0; // Keeping placeholder for now
+
   return (
     <div className="results">
       {/* Header Section */}
@@ -108,48 +113,49 @@ function Results() {
       {/* Main Metrics Section */}
       <section className="metrics-section">
         <div className="container">
+          {/* Impact Zone Map (moved to top) */}
+          <ImpactZoneMap />
+
+          {/* New Metrics Visualizations Grid (always rendered with default values if no impactData) */}
+          <div className="new-metrics-visualizations-grid">
+            <MetricVisualization
+              label="Energy Released"
+              value={energyValue}
+              unit="Mt"
+              color="#00bcd4"
+              maxValue={100} // Example max value, adjust as needed
+            />
+            <MetricVisualization
+              label="Blast Radius"
+              value={blastRadiusValue}
+              unit="km"
+              color="#9c27b0"
+              maxValue={500} // Example max value, adjust as needed
+            />
+            <MetricVisualization
+              label="Population Affected"
+              value={populationAffectedValue}
+              unit="K"
+              color="#ff9800"
+              maxValue={1000} // Example max value, adjust as needed
+            />
+            <MetricVisualization
+              label="Tsunami Height"
+              value={tsunamiHeightValue}
+              unit="m"
+              color="#00bcd4"
+              maxValue={100} // Example max value, adjust as needed
+            />
+          </div>
+
+          {/* Old static metrics (commented out/removed previously) */}
           <div className="metrics-grid">
-            {/* Remove the static metric components */}
             {/* <EnergyMetrics /> */}
             {/* <BlastRadiusMetrics /> */}
             {/* <PopulationMetrics /> */}
             {/* <TsunamiMetrics /> */}
           </div>
-          {impactData && (
-            <div className="new-metrics-visualizations-grid">
-              <MetricVisualization
-                label="Energy Released"
-                value={parseFloat(impactData.energy).toFixed(1)}
-                unit="Mt"
-                color="#00bcd4"
-                maxValue={100} // Example max value, adjust as needed
-              />
-              <MetricVisualization
-                label="Blast Radius"
-                value={parseFloat(impactData.blastRadius).toFixed(1)}
-                unit="km"
-                color="#9c27b0"
-                maxValue={500} // Example max value, adjust as needed
-              />
-              <MetricVisualization
-                label="Population Affected"
-                value={impactData.affectedPopulation.replace(/,/g, '') / 1000} // Convert to K and remove comma
-                unit="K"
-                color="#ff9800"
-                maxValue={1000} // Example max value, adjust as needed
-              />
-              <MetricVisualization
-                label="Tsunami Height"
-                value={86.3} // Placeholder, as tsunami height is not directly in impactData
-                unit="m"
-                color="#00bcd4"
-                maxValue={100} // Example max value, adjust as needed
-              />
-            </div>
-          )}
-          {impactData && (
-            <ImpactZoneMap />
-          )}
+
         </div>
       </section>
 
