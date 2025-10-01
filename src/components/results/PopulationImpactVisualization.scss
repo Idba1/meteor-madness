@@ -1,0 +1,30 @@
+.population-impact-visualization-container {
+  background-color: #1a1a2e;
+  border-radius: 12px;
+  padding: 20px;
+  margin-top: 4rem; /* Will be adjusted by parent grid */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: #e0e0e0;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+  width: 100%;
+  max-width: 540px; /* Max width to match ImpactZoneMap */
+  margin-left: auto;
+  margin-right: auto;
+  box-sizing: border-box;
+
+  h3 {
+    font-size: 1.5em;
+    color: #00bcd4;
+    margin-bottom: 20px;
+  }
+
+  .population-impact-canvas {
+    border: 1px solid #33334d;
+    border-radius: 8px;
+    background-color: #22223a;
+    width: 100%;
+    height: auto;
+  }
+}

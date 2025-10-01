@@ -95,6 +95,18 @@
   .metrics-section {
     padding: 4rem 0;
 
+    .visualizations-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+      margin-bottom: 4rem;
+
+      @media (max-width: 1024px) {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+      }
+    }
+
     .metrics-grid {
       display: grid;
       grid-template-columns: repeat(4, 1fr);

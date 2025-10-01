@@ -3,6 +3,7 @@ import ImpactAnalysis from '../components/results/ImpactAnalysis';
 import ImpactDistribution from '../components/results/ImpactDistribution';
 import MetricVisualization from '../components/results/MetricVisualization'; // Import new component
 import ImpactZoneMap from '../components/results/ImpactZoneMap'; // Import new component
+import PopulationImpactVisualization from '../components/results/PopulationImpactVisualization'; // Import new component
 import EarthVisualization from '../components/3d/EarthVisualization';
 import { useAppContext } from '../context/AppContext';
 import { useNavigate } from 'react-router-dom';
@@ -113,8 +114,13 @@ function Results() {
       {/* Main Metrics Section */}
       <section className="metrics-section">
         <div className="container">
-          {/* Impact Zone Map (moved to top) */}
-          <ImpactZoneMap />
+          <div className="visualizations-row">
+            {/* Impact Zone Map */}
+            <ImpactZoneMap />
+
+            {/* Population Impact Visualization */}
+            <PopulationImpactVisualization />
+          </div>
 
           {/* New Metrics Visualizations Grid (always rendered with default values if no impactData) */}
           <div className="new-metrics-visualizations-grid">
