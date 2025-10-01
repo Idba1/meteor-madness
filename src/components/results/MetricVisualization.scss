@@ -1,0 +1,65 @@
+.metric-visualization-card {
+  background-color: #1a1a2e; /* Dark background */
+  border-radius: 12px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  color: #e0e0e0; /* Light gray text */
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+  /* Remove fixed width */
+  max-width: 100%; /* Ensure it doesn't overflow its parent */
+  box-sizing: border-box; /* Include padding and border in the element's total width */
+  margin: 10px; /* Spacing between cards */
+  min-height: 180px;
+  justify-content: space-between;
+
+  .metric-label {
+    font-size: 0.9em;
+    color: #a0a0a0; /* Slightly lighter label */
+    margin-bottom: 10px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+
+  .metric-value-container {
+    display: flex;
+    align-items: baseline;
+    margin-bottom: 15px;
+  }
+
+  .metric-value {
+    font-size: 2.8em;
+    font-weight: 700;
+    line-height: 1;
+    margin-right: 8px;
+  }
+
+  .metric-unit {
+    font-size: 1.2em;
+    font-weight: 500;
+    color: #a0a0a0;
+  }
+
+  .metric-progress-bar {
+    width: 100%;
+    height: 6px;
+    background-color: #33334d; /* Darker track for progress bar */
+    border-radius: 3px;
+    overflow: hidden;
+    margin-bottom: 10px;
+  }
+
+  .metric-progress {
+    height: 100%;
+    border-radius: 3px;
+    transition: width 0.8s ease-out;
+  }
+
+  .metric-description {
+    font-size: 0.8em;
+    color: #606080; /* Muted description text */
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+}

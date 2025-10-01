@@ -111,6 +111,22 @@
     }
   }
 
+  .new-metrics-visualizations-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); // Allow cards to auto-fit and be flexible
+    gap: 1rem; // Reduce gap for more space
+    margin-top: 4rem; // Add some space above this new grid
+
+    @media (max-width: 1024px) {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    @media (max-width: 768px) {
+      grid-template-columns: 1fr;
+      gap: 1rem;
+    }
+  }
+
   .analysis-section {
     padding: 2rem 0 4rem;
 

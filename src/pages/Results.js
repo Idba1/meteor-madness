@@ -1,10 +1,7 @@
 import React, { Suspense } from 'react';
 import ImpactAnalysis from '../components/results/ImpactAnalysis';
 import ImpactDistribution from '../components/results/ImpactDistribution';
-import EnergyMetrics from '../components/results/EnergyMetrics';
-import PopulationMetrics from '../components/results/PopulationMetrics';
-import TsunamiMetrics from '../components/results/TsunamiMetrics';
-import BlastRadiusMetrics from '../components/results/BlastRadiusMetrics';
+import MetricVisualization from '../components/results/MetricVisualization'; // Import new component
 import EarthVisualization from '../components/3d/EarthVisualization';
 import { useAppContext } from '../context/AppContext';
 import { useNavigate } from 'react-router-dom';
@@ -111,11 +108,44 @@ function Results() {
       <section className="metrics-section">
         <div className="container">
           <div className="metrics-grid">
-            <EnergyMetrics />
-            <BlastRadiusMetrics />
-            <PopulationMetrics />
-            <TsunamiMetrics />
+            {/* Remove the static metric components */}
+            {/* <EnergyMetrics /> */}
+            {/* <BlastRadiusMetrics /> */}
+            {/* <PopulationMetrics /> */}
+            {/* <TsunamiMetrics /> */}
           </div>
+          {impactData && (
+            <div className="new-metrics-visualizations-grid">
+              <MetricVisualization
+                label="Energy Released"
+                value={parseFloat(impactData.energy).toFixed(1)}
+                unit="Mt"
+                color="#00bcd4"
+                maxValue={100} // Example max value, adjust as needed
+              />
+              <MetricVisualization
+                label="Blast Radius"
+                value={parseFloat(impactData.blastRadius).toFixed(1)}
+                unit="km"
+                color="#9c27b0"
+                maxValue={500} // Example max value, adjust as needed
+              />
+              <MetricVisualization
+                label="Population Affected"
+                value={impactData.affectedPopulation.replace(/,/g, '') / 1000} // Convert to K and remove comma
+                unit="K"
+                color="#ff9800"
+                maxValue={1000} // Example max value, adjust as needed
+              />
+              <MetricVisualization
+                label="Tsunami Height"
+                value={86.3} // Placeholder, as tsunami height is not directly in impactData
+                unit="m"
+                color="#00bcd4"
+                maxValue={100} // Example max value, adjust as needed
+              />
+            </div>
+          )}
         </div>
       </section>
 
