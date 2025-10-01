@@ -2,6 +2,7 @@ import React, { Suspense } from 'react';
 import ImpactAnalysis from '../components/results/ImpactAnalysis';
 import ImpactDistribution from '../components/results/ImpactDistribution';
 import MetricVisualization from '../components/results/MetricVisualization'; // Import new component
+import ImpactZoneMap from '../components/results/ImpactZoneMap'; // Import new component
 import EarthVisualization from '../components/3d/EarthVisualization';
 import { useAppContext } from '../context/AppContext';
 import { useNavigate } from 'react-router-dom';
@@ -145,6 +146,9 @@ function Results() {
                 maxValue={100} // Example max value, adjust as needed
               />
             </div>
+          )}
+          {impactData && (
+            <ImpactZoneMap />
           )}
         </div>
       </section>
