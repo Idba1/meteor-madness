@@ -12,7 +12,7 @@ const PopulationImpactVisualization = () => {
     if (!canvas) return;
 
     const ctx = canvas.getContext('2d');
-    const width = canvas.width;
+    const width = 600; // Increased width
     const height = canvas.height;
     const centerX = width / 2;
     const centerY = height / 2;
@@ -75,11 +75,12 @@ const PopulationImpactVisualization = () => {
     ctx.fillStyle = '#facc15'; // Yellow
     ctx.fill();
 
-    // Draw legend
-    const legendX = centerX + adjustedRadius + 30; // Adjust legendX based on adjustedRadius
-    let legendY = centerY - 60; // Start legend higher
+    // Draw legend at the bottom
     const legendSquareSize = 15;
     const legendTextOffset = legendSquareSize + 10;
+    const legendTotalWidth = 250; // Estimated total width for legend items
+    const legendStartX = centerX - (legendTotalWidth / 2); // Center the legend horizontally
+    let legendStartY = height - 100; // Start legend further down
 
     ctx.font = '12px Arial';
     ctx.fillStyle = '#e0e0e0';
@@ -87,34 +88,34 @@ const PopulationImpactVisualization = () => {
 
     // Direct Impact Legend
     ctx.fillStyle = '#dc2626';
-    ctx.fillRect(legendX, legendY, legendSquareSize, legendSquareSize);
+    ctx.fillRect(legendStartX, legendStartY, legendSquareSize, legendSquareSize);
     ctx.fillStyle = '#e0e0e0';
-    ctx.fillText(`Direct Impact: ${directImpact.toLocaleString()}`, legendX + legendTextOffset, legendY + legendSquareSize / 2 + 4);
-    legendY += 25;
+    ctx.fillText(`Direct Impact: ${directImpact.toLocaleString()}`, legendStartX + legendTextOffset, legendStartY + legendSquareSize / 2 + 4);
+    legendStartY += 20; // Reduced line height
 
     // Secondary Effects Legend
     ctx.fillStyle = '#fb923c';
-    ctx.fillRect(legendX, legendY, legendSquareSize, legendSquareSize);
+    ctx.fillRect(legendStartX, legendStartY, legendSquareSize, legendSquareSize);
     ctx.fillStyle = '#e0e0e0';
-    ctx.fillText(`Secondary: ${secondary.toLocaleString()}`, legendX + legendTextOffset, legendY + legendSquareSize / 2 + 4);
-    legendY += 25;
+    ctx.fillText(`Secondary: ${secondary.toLocaleString()}`, legendStartX + legendTextOffset, legendStartY + legendSquareSize / 2 + 4);
+    legendStartY += 20; // Reduced line height
 
     // Long Term Effects Legend
     ctx.fillStyle = '#facc15';
-    ctx.fillRect(legendX, legendY, legendSquareSize, legendSquareSize);
+    ctx.fillRect(legendStartX, legendStartY, legendSquareSize, legendSquareSize);
     ctx.fillStyle = '#e0e0e0';
-    ctx.fillText(`Long Term: ${longTerm.toLocaleString()}`, legendX + legendTextOffset, legendY + legendSquareSize / 2 + 4);
-    legendY += 25;
+    ctx.fillText(`Long Term: ${longTerm.toLocaleString()}`, legendStartX + legendTextOffset, legendStartY + legendSquareSize / 2 + 4);
+    legendStartY += 20; // Reduced line height
 
     ctx.fillStyle = '#e0e0e0';
-    ctx.fillText(`Total Affected: ${totalAffected.toLocaleString()}`, legendX + legendTextOffset, legendY + legendSquareSize / 2 + 4);
+    ctx.fillText(`Total Affected: ${totalAffected.toLocaleString()}`, legendStartX + legendTextOffset, legendStartY + legendSquareSize / 2 + 4);
 
   }, [impactData]);
 
   return (
     <div className="population-impact-visualization-container">
       <h3>Population Impact Breakdown</h3>
-      <canvas ref={canvasRef} width="500" height="400" className="population-impact-canvas"></canvas>
+      <canvas ref={canvasRef} width="600" height="400" className="population-impact-canvas"></canvas> {/* Updated width */}
     </div>
   );
 };
