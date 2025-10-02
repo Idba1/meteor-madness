@@ -12,6 +12,8 @@ import './Results.scss';
 
 function Results() {
   const { state } = useAppContext();
+
+
   const { impactData } = state;
   const navigate = useNavigate();
 
@@ -104,7 +106,7 @@ function Results() {
 
             <div className="header-visual">
               <Suspense fallback={<div className="loading-spinner"></div>}>
-                <EarthVisualization impactData={impactData} /> {/* Pass impactData to EarthVisualization */}
+                <EarthVisualization impactData={impactData} />
               </Suspense>
             </div>
           </div>

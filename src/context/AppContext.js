@@ -3,6 +3,9 @@ import React, { createContext, useContext, useReducer, useEffect, useState } fro
 const AppContext = createContext();
 
 const initialState = {
+  impactArea: {
+    lat: 0, lng: 0, location: ""
+  },
   asteroidData: [],
   selectedAsteroid: null,
   simulationParams: {
@@ -20,7 +23,7 @@ const initialState = {
     units: 'metric',
     notifications: true
   },
-  impactData: null // Added impactData to initial state
+  impactData: null
 };
 
 function appReducer(state, action) {
@@ -51,6 +54,15 @@ function appReducer(state, action) {
       };
     case 'CLEAR_ERROR':
       return { ...state, error: null };
+    case 'SET_IMPACT_AREA':
+      return {
+        ...state,
+        impactArea: {
+          ...state.impactArea, 
+          ...action.payload  
+        }
+      };
+
     default:
       return state;
   }
