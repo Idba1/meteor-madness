@@ -9,7 +9,7 @@ import RealMap from '../components/RealMap/RealMap';
 import { useAppContext } from '../context/AppContext';
 
 function Dashboard() {
-  const { dispatch } = useAppContext();
+  const { dispatch , state} = useAppContext();
   // Local state for location and asteroid selection
   const [selectedLocation, setSelectedLocation] = useState(null);
   const [selectedAsteroid, setSelectedAsteroid] = useState(null);
@@ -38,7 +38,6 @@ function Dashboard() {
     }
 
     if (location.display_name) {
-      // For search results from Nominatim API, format the display name
       const parts = location.display_name.split(',');
       if (parts.length >= 2) {
         return `${parts[0].trim()}, ${parts[1].trim()}`;
@@ -49,11 +48,9 @@ function Dashboard() {
     if (location.name) {
       return location.name;
     }
-
     return 'Unknown Location';
   };
 
-  // Search location using OpenStreetMap Nominatim
   const searchLocation = useCallback(async (query) => {
     if (!query.trim()) {
       setSearchResults([]);
@@ -66,6 +63,7 @@ function Dashboard() {
       );
       const data = await response.json();
       setSearchResults(data);
+
     } catch (error) {
       setSearchResults([]);
     }
@@ -79,6 +77,7 @@ function Dashboard() {
     }, 300);
     return () => clearTimeout(timer);
   }, [searchQuery, searchLocation]);
+  const [impactLocation, setImpactLocation] = useState(null);
 
   // Enhanced impact calculation using both asteroid data and simulation parameters
   const impactData = useMemo(() => {
@@ -157,11 +156,12 @@ function Dashboard() {
 
   // Memoized callback function to prevent infinite re-renders
   const handleRunSimulation = useCallback((params) => {
-    console.log('Running simulation with parameters:', params);
+    console.log("Simulation started at:", selectedLocation);
+    //  console.log('Running simulation with parameters:', params);
     setSimulationParams(params);
     setSelectedAsteroid(params.selectedAsteroid?.name);
     setSelectedLocation(params.impactLocation);
-    setSimulationTrigger(prev => prev + 1); // Trigger meteor animation
+    setSimulationTrigger(prev => prev + 1);
   }, []);
 
   useEffect(() => {
@@ -170,12 +170,17 @@ function Dashboard() {
     }
   }, [impactData, dispatch]);
 
-  // Handle location change from dropdown or search
   const handleLocationChange = useCallback((location) => {
     console.log('Dashboard: Setting selected location to:', location);
     setSelectedLocation(location);
-    // Update map position without triggering meteor animation
-    // This will be handled in RealMap component
+    dispatch({
+      type: 'SET_IMPACT_AREA',
+      payload: {
+        ...state.impactArea, 
+        location: location 
+      }
+    });
+
   }, []);
 
   return (
@@ -207,12 +212,12 @@ function Dashboard() {
               <Suspense fallback={<div className="loading-spinner"></div>}>
                 <RealMap
                   selectedLocation={selectedLocation}
+                  impactLocation={impactLocation}
                   selectedAsteroid={selectedAsteroid}
                   simulationTrigger={simulationTrigger}
                   simulationParams={simulationParams}
-                  zoom={0.5}
-                  center={{ lat: 0, lng: 0 }}
                 />
+
               </Suspense>
             </div>
           </div>

@@ -3,12 +3,39 @@ import { Map, MapStyle, config } from "@maptiler/sdk";
 import "@maptiler/sdk/dist/maptiler-sdk.css";
 import "./RealMap.scss";
 import locations from '../../data/locations.json';
+import { useAppContext } from "../../context/AppContext";
 
-export default function RealMap({ selectedLocation, selectedAsteroid, simulationTrigger, simulationParams }) {
+export default function RealMap({ resetTrigger, selectedLocation, selectedAsteroid, simulationTrigger, simulationParams, ...props }) {
     const size = 200;
     const mapContainer = useRef(null);
     const mapRef = useRef(null);
     const currentLocationRef = useRef(selectedLocation);
+    const { dispatch } = useAppContext();
+    const playIncomingSound = () => {
+        const audio = new Audio("/incoming.mp3");
+        audio.play().catch(err => console.error("Incoming sound error:", err));
+    };
+
+    const playImpactSound = () => {
+        const audio = new Audio("/asteroid.mp3");
+        audio.play().catch(err => console.error("Sound error:", err));
+    };
+
+
+    // runMeteorAnimation function modify koro
+    const runMeteorAnimation = () => {
+        if (!mapRef.current) return;
+
+        // === meteor animation logic ===
+        const meteor = document.createElement("div");
+        meteor.className = "meteor";
+        document.body.appendChild(meteor);
+        playImpactSound();
+
+        setTimeout(() => {
+            meteor.remove();
+        }, 5000);
+    };
 
     useEffect(() => {
         // Wait for DOM to be ready and check container
@@ -172,12 +199,23 @@ export default function RealMap({ selectedLocation, selectedAsteroid, simulation
         if (typeof selectedLocation === 'object' && selectedLocation.centroid) {
             const coords = [selectedLocation.centroid.lon, selectedLocation.centroid.lat];
             console.log('Using search result coordinates:', coords, 'from centroid:', selectedLocation.centroid);
+            dispatch({
+                type: 'SET_IMPACT_AREA',
+                payload: {
+                    lat: selectedLocation.centroid.lat,
+                    lng: selectedLocation.centroid.lon,
+                }
+            });
             return coords;
         } else if (typeof selectedLocation === 'string' && locations[selectedLocation]) {
             const location = locations[selectedLocation];
             if (location.centroid) {
                 const coords = [location.centroid.lon, location.centroid.lat];
                 console.log('Using dropdown location coordinates:', coords);
+                dispatch({
+                    type: 'SET_IMPACT_AREA',
+                    payload: { lat: location.centroid.lat, lng: location.centroid.lon }
+                });
                 return coords;
             }
         }
@@ -220,6 +258,13 @@ export default function RealMap({ selectedLocation, selectedAsteroid, simulation
             });
         }
     }, [selectedLocation]);
+    useEffect(() => {
+        if (!mapContainer.current) return;
+        const existingMeteors = mapContainer.current.querySelectorAll('.meteor-container, .impact-explosion');
+        existingMeteors.forEach(el => el.remove());
+        console.log('RealMap: cleaned up meteors due to resetTrigger =', resetTrigger);
+    }, [resetTrigger]);
+
 
     // Handle simulation trigger (when Run Simulation is clicked)
     useEffect(() => {
@@ -244,7 +289,6 @@ export default function RealMap({ selectedLocation, selectedAsteroid, simulation
 
         // Create elaborate meteor impact effect using DOM elements
         const createMeteorEffect = () => {
-            if (!mapRef.current) return; // Add null check here
             // Clean up any existing meteor/explosion elements
             const existingMeteors = mapContainer.current.querySelectorAll('.meteor-container, .impact-explosion');
             existingMeteors.forEach(meteor => meteor.remove());
@@ -289,7 +333,6 @@ export default function RealMap({ selectedLocation, selectedAsteroid, simulation
             const duration = Math.max(1000, baseDuration - (velocity - 19.3) * 50); // Faster for higher velocity
 
             const animateMeteor = (timestamp) => {
-                if (!mapRef.current) return; // Add null check here
                 if (!startTime) startTime = timestamp;
                 const progress = Math.min((timestamp - startTime) / duration, 1);
 
@@ -314,6 +357,7 @@ export default function RealMap({ selectedLocation, selectedAsteroid, simulation
                 if (progress < 1) {
                     requestAnimationFrame(animateMeteor);
                 } else {
+                    playImpactSound();
                     // Impact effect
                     meteorEl.className = 'meteor meteor-impact';
                     // Create persistent explosion effect
@@ -334,30 +378,29 @@ export default function RealMap({ selectedLocation, selectedAsteroid, simulation
                         explosionEl.appendChild(debris);
                     }
                     mapContainer.current.appendChild(explosionEl);
+                    runMeteorAnimation();
+
                 }
             };
-
+            playIncomingSound();
             requestAnimationFrame(animateMeteor);
+
 
             // Listen for map move/rotate and update explosion position
             const updateExplosionPosition = () => {
-                if (explosionEl && mapRef.current) { // Add null check for mapRef.current here
+                if (explosionEl) {
                     const pixel = mapRef.current.project(targetCoords);
                     explosionEl.style.left = `${pixel.x}px`;
                     explosionEl.style.top = `${pixel.y}px`;
                 }
             };
-            if (mapRef.current) { // Add conditional call
-                mapRef.current.on('move', updateExplosionPosition);
-                mapRef.current.on('rotate', updateExplosionPosition);
-            }
+            mapRef.current.on('move', updateExplosionPosition);
+            mapRef.current.on('rotate', updateExplosionPosition);
 
             // Clean up listeners when location/asteroid changes
             return () => {
-                if (mapRef.current) { // Add conditional call
-                    mapRef.current.off('move', updateExplosionPosition);
-                    mapRef.current.off('rotate', updateExplosionPosition);
-                }
+                mapRef.current.off('move', updateExplosionPosition);
+                mapRef.current.off('rotate', updateExplosionPosition);
             };
         };
 
