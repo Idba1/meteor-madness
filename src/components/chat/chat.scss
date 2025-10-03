@@ -1,0 +1,322 @@
+.chat-body::-webkit-scrollbar {
+    width: 8px;
+}
+
+.chat-body::-webkit-scrollbar-track {
+    background: #1f2937;
+    border-radius: 10px;
+}
+
+.chat-body::-webkit-scrollbar-thumb {
+    background: #4b5563;
+    border-radius: 10px;
+}
+
+.chat-body::-webkit-scrollbar-thumb:hover {
+    background: #6b7280;
+}
+
+/* Main Container for Floating Widget */
+.chat-fixed-container {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 1000;
+    font-family: 'Inter', sans-serif;
+}
+
+/* Chat Toggle Button */
+.chat-toggle-button {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background-color: #4f46e5;
+    /* bg-indigo-600 */
+    color: #ffffff;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    border: none;
+    transition: background-color 0.2s, transform 0.3s;
+    z-index: 1002;
+    /* Above the chat window */
+}
+
+.chat-toggle-button:hover {
+    background-color: #4338ca;
+    /* hover:bg-indigo-700 */
+    transform: scale(1.05);
+}
+
+.chat-toggle-button svg {
+    width: 1.5rem;
+    height: 1.5rem;
+}
+
+.chat-toggle-button.closed-icon {
+    transform: scale(1);
+}
+
+.chat-toggle-button.open-icon {
+    transform: scale(0);
+    opacity: 0;
+    pointer-events: none;
+}
+
+
+/* Chat Wrapper (Pop-up Window) */
+.chat-wrapper {
+    position: absolute;
+    bottom: 80px;
+    /* Position above the toggle button */
+    right: 0;
+    width: 400px;
+    /* Fixed width for pop-up */
+    height: 600px;
+    /* Fixed height for pop-up */
+    background-color: #1f2937;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.4);
+    border-radius: 1rem;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    z-index: 1001;
+
+    /* Animation/Transition Setup */
+    transition: transform 0.3s ease-out, opacity 0.3s ease-out;
+    transform-origin: bottom right;
+}
+
+/* Closed state (Mimicking Framer Motion animation via CSS) */
+.chat-wrapper.closed {
+    opacity: 0;
+    transform: scale(0.5) translateY(50px);
+    /* Shrink and move down */
+    pointer-events: none;
+    /* Make it unclickable when closed */
+}
+
+/* Open state */
+.chat-wrapper.open {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+    pointer-events: auto;
+}
+
+/* Header */
+.chat-header {
+    padding: 1rem;
+    background-color: #312e81;
+    /* bg-indigo-900 */
+    color: #ffffff;
+    font-size: 1.15rem;
+    font-weight: 700;
+    border-top-left-radius: 1rem;
+    border-top-right-radius: 1rem;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.2);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.chat-header-title {
+    display: flex;
+    align-items: center;
+}
+
+.chat-header-title svg {
+    width: 1.5rem;
+    height: 1.5rem;
+    margin-right: 0.5rem;
+    color: #fcd34d;
+}
+
+/* Close Button */
+.chat-close-button {
+    background: none;
+    border: none;
+    color: #ffffff;
+    cursor: pointer;
+    padding: 0.5rem;
+    border-radius: 0.5rem;
+    transition: background-color 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.chat-close-button:hover {
+    background-color: #4338ca;
+}
+
+.chat-close-button svg {
+    width: 1.25rem;
+    height: 1.25rem;
+}
+
+
+/* Chat Body */
+.chat-body {
+    flex: 1;
+    padding: 1rem;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    /* Background is set by .chat-wrapper */
+}
+
+/* Message Alignment */
+.chat-message-row {
+    display: flex;
+}
+
+.chat-message-row.user {
+    justify-content: flex-end;
+}
+
+.chat-message-row.bot {
+    justify-content: flex-start;
+}
+
+/* Message Bubble */
+.chat-message-bubble {
+    max-width: 85%;
+    padding: 0.75rem;
+    border-radius: 0.75rem;
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+    font-size: 0.875rem;
+    word-wrap: break-word;
+    white-space: pre-wrap;
+    /* Ensures line breaks and markdown text look correct */
+}
+
+.chat-message-bubble.user {
+    background-color: #4f46e5;
+    color: #ffffff;
+    border-bottom-right-radius: 0;
+}
+
+.chat-message-bubble.bot {
+    background-color: #374151;
+    color: #e5e7eb;
+    border-top-left-radius: 0;
+}
+
+.chat-message-bubble.loading {
+    opacity: 0.8;
+}
+
+/* Input Area - NOW USES THE SAME BACKGROUND AS THE CHAT BODY */
+.chat-input-area {
+    padding: 1rem;
+    background-color: #1f2937;
+    /* CHANGED: Same as chat-wrapper/chat-body */
+    border-bottom-left-radius: 1rem;
+    border-bottom-right-radius: 1rem;
+    box-shadow: none;
+    /* REMOVED: To allow seamless blending */
+}
+
+/* Quick Questions - Fixed to bottom of Chat Window */
+.quick-questions {
+    margin-bottom: 0.75rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    justify-content: flex-start;
+    align-items: center;
+    overflow-x: auto;
+    padding-bottom: 5px;
+    /* space for scrollbar on desktop */
+}
+
+.quick-question-button {
+    font-size: 0.7rem;
+    padding: 0.2rem 0.6rem;
+    background-color: #374151;
+    color: #d1d5db;
+    border-radius: 9999px;
+    transition: all 0.2s;
+    box-shadow: inset 0 1px 2px 0 rgba(0, 0, 0, 0.2);
+    white-space: nowrap;
+    cursor: pointer;
+    border: none;
+}
+
+.quick-question-button:hover:not(:disabled) {
+    background-color: #4338ca;
+    color: #ffffff;
+}
+
+.quick-question-button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* Input and Button Group */
+.chat-input-group {
+    display: flex;
+    gap: 0.5rem;
+}
+
+/* Input Field */
+.chat-input {
+    flex: 1;
+    padding: 0.75rem;
+    border: 1px solid #4b5563;
+    border-radius: 0.75rem;
+    background-color: #374151;
+    color: #ffffff;
+    outline: none;
+    transition: all 0.2s;
+}
+
+.chat-input::placeholder {
+    color: #9ca3af;
+}
+
+.chat-input:focus {
+    border-color: #6366f1;
+    box-shadow: 0 0 0 2px #6366f1;
+}
+
+/* Send Button */
+.chat-send-button {
+    padding: 0.5rem 1rem;
+    background-color: #4f46e5;
+    color: #ffffff;
+    font-weight: 600;
+    border-radius: 0.75rem;
+    transition: all 0.2s;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+    border: none;
+    display: flex;
+    align-items: center;
+}
+
+.chat-send-button:hover:not(:disabled) {
+    background-color: #4338ca;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.2);
+}
+
+.chat-send-button:active:not(:disabled) {
+    transform: scale(0.95);
+}
+
+.chat-send-button:disabled {
+    background-color: #4b5563;
+    cursor: not-allowed;
+    box-shadow: none;
+}
+
+.chat-send-button svg {
+    width: 1.25rem;
+    height: 1.25rem;
+}

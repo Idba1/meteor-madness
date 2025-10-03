@@ -9,7 +9,7 @@ import RealMap from '../components/RealMap/RealMap';
 import { useAppContext } from '../context/AppContext';
 
 function Dashboard() {
-  const { dispatch , state} = useAppContext();
+  const { dispatch, state } = useAppContext();
   // Local state for location and asteroid selection
   const [selectedLocation, setSelectedLocation] = useState(null);
   const [selectedAsteroid, setSelectedAsteroid] = useState(null);
@@ -163,6 +163,21 @@ function Dashboard() {
     setSelectedLocation(params.impactLocation);
     setSimulationTrigger(prev => prev + 1);
   }, []);
+  const handleReset = useCallback(() => {
+    console.log("Reset simulation");
+
+    setSimulationTrigger(prev => prev + 1); // triggers RealMap reset & animation
+
+    setSelectedLocation(null);
+    setSelectedAsteroid(null);
+    setSimulationParams({
+      diameter: 250,
+      velocity: 19.3,
+      entryAngle: 45,
+      impactLocation: 'Ocean (Pacific)',
+      selectedAsteroid: null
+    });
+  }, []);
 
   useEffect(() => {
     if (impactData) {
@@ -176,8 +191,8 @@ function Dashboard() {
     dispatch({
       type: 'SET_IMPACT_AREA',
       payload: {
-        ...state.impactArea, 
-        location: location 
+        ...state.impactArea,
+        location: location
       }
     });
 
@@ -191,6 +206,7 @@ function Dashboard() {
 
           {/* Simulation Parameters */}
           <SimulationParameters
+            handleReset={handleReset}
             onRunSimulation={handleRunSimulation}
             onLocationChange={handleLocationChange}
             searchQuery={searchQuery}
@@ -211,11 +227,14 @@ function Dashboard() {
             <div className="earth-container">
               <Suspense fallback={<div className="loading-spinner"></div>}>
                 <RealMap
+                  handleReset={handleReset} 
                   selectedLocation={selectedLocation}
-                  impactLocation={impactLocation}
                   selectedAsteroid={selectedAsteroid}
-                  simulationTrigger={simulationTrigger}
+                  simulationTrigger={simulationTrigger} 
+                  resetTrigger={simulationTrigger}      
                   simulationParams={simulationParams}
+                  zoom={0.5}
+                  center={{ lat: 0, lng: 0 }}
                 />
 
               </Suspense>

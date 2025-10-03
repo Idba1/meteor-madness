@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "private": true,
   "dependencies": {
+    "@google/genai": "^1.22.0",
     "@maptiler/sdk": "^3.8.0",
     "@react-three/drei": "^9.122.0",
     "@react-three/fiber": "^8.18.0",
