@@ -69,7 +69,7 @@ const App = () => {
     ]);
     const [input, setInput] = useState("");
     const [loading, setLoading] = useState(false);
-    const [isChatOpen, setIsChatOpen] = useState(true);
+    const [isChatOpen, setIsChatOpen] = useState(false);
     const messagesEndRef = useRef(null);
 
     // Scroll to the bottom of the chat body on new messages
@@ -199,8 +199,13 @@ const App = () => {
                     aria-expanded={isChatOpen}
                     aria-controls="nasa-chatbot"
                 >
-                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path></svg>
+                    <img
+                        src="./chatbotlogo.gif"
+                        alt="Chat Icon"
+                        style={{ width: '180px', height: '180px' }}
+                    />
                 </button>
+
 
                 {/* Chat Wrapper - visible only when open */}
                 <div

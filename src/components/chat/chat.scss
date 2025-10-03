@@ -30,13 +30,11 @@
     position: absolute;
     bottom: 0;
     right: 0;
-    width: 60px;
-    height: 60px;
-    border-radius: 50%;
-    background-color: #4f46e5;
-    /* bg-indigo-600 */
+    // width: 100px;
+    // height: 100px;
+    // border-radius: 50%;
+    background-color: transparent;
     color: #ffffff;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -48,15 +46,10 @@
 }
 
 .chat-toggle-button:hover {
-    background-color: #4338ca;
-    /* hover:bg-indigo-700 */
     transform: scale(1.05);
 }
 
-.chat-toggle-button svg {
-    width: 1.5rem;
-    height: 1.5rem;
-}
+
 
 .chat-toggle-button.closed-icon {
     transform: scale(1);
