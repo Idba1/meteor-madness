@@ -4,6 +4,18 @@ import "@maptiler/sdk/dist/maptiler-sdk.css";
 import "./RealMap.scss";
 import locations from '../../data/locations.json';
 import { useAppContext } from "../../context/AppContext";
+import {
+    Chart as ChartJS,
+    LineElement,
+    PointElement,
+    CategoryScale,
+    LinearScale,
+    Tooltip,
+    Legend,
+    Filler
+} from "chart.js";
+
+ChartJS.register(LineElement, PointElement, CategoryScale, LinearScale, Tooltip, Legend, Filler);
 
 export default function RealMap({ resetTrigger, selectedLocation, selectedAsteroid, simulationTrigger, simulationParams, ...props }) {
     const size = 200;
@@ -60,7 +72,7 @@ export default function RealMap({ resetTrigger, selectedLocation, selectedAstero
             try {
                 map = new Map({
                     container: container,
-                    style: MapStyle.BASIC,
+                    style: `https://api.maptiler.com/maps/basic-v2/style.json?key=${config.apiKey}`,
                     center: coords,
                     zoom: 1.8,
                     minZoom: 0.5,
@@ -174,10 +186,16 @@ export default function RealMap({ resetTrigger, selectedLocation, selectedAstero
             }
 
             return () => {
-                if (map) {
-                    map.remove();
+                if (mapRef.current) {
+                    try {
+                        mapRef.current.remove();
+                    } catch (e) {
+                        console.debug("Map already removed:", e.message);
+                    }
+                    mapRef.current = null;
                 }
             };
+
         };
 
         // Initialize with a small delay to ensure DOM is ready
@@ -399,9 +417,12 @@ export default function RealMap({ resetTrigger, selectedLocation, selectedAstero
 
             // Clean up listeners when location/asteroid changes
             return () => {
-                mapRef.current.off('move', updateExplosionPosition);
-                mapRef.current.off('rotate', updateExplosionPosition);
+                if (mapRef.current) {
+                    mapRef.current.off('move', updateExplosionPosition);
+                    mapRef.current.off('rotate', updateExplosionPosition);
+                }
             };
+
         };
 
         // Start meteor animation immediately (map is already positioned)

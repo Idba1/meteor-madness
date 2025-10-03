@@ -7,6 +7,7 @@ import StoryMode from './pages/StoryMode';
 import Dashboard from './pages/Dashboard';
 import Results from './pages/Results';
 import './styles/main.scss';
+import Chatbot from './components/chat/Chat';
 
 function App() {
   useEffect(() => {
@@ -31,6 +32,7 @@ function App() {
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/results" element={<Results />} />
           </Routes>
+          <Chatbot />
         </div>
       </Router>
     </AppProvider>

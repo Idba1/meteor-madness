@@ -3,7 +3,7 @@ import locationsData from '../../data/locations.json';
 import asteroidsData from '../../data/asteroids.json';
 import './SimulationParameters.scss';
 
-function SimulationParameters({ onRunSimulation, onLocationChange, searchQuery, setSearchQuery, searchResults, searchLoading }) {
+function SimulationParameters({handleReset, onRunSimulation, onLocationChange, searchQuery, setSearchQuery, searchResults, searchLoading }) {
   // Simulation parameters state
   const [diameter, setDiameter] = useState(250); // meters
   const [velocity, setVelocity] = useState(19.3); // km/s
@@ -234,7 +234,7 @@ function SimulationParameters({ onRunSimulation, onLocationChange, searchQuery, 
           <span className="btn-icon">▶</span>
           Run Simulation
         </button>
-        <button className="reset-btn">
+        <button className="reset-btn" onClick={handleReset}>
           <span className="btn-icon">↻</span>
         </button>
       </div>
