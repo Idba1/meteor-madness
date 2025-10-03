@@ -5,11 +5,17 @@ import "./Map.scss";
 import { useAppContext } from "../../context/AppContext";
 
 export default function EarthVisualization() {
+
   const mapContainer = useRef(null);
   const mapRef = useRef(null);
   const markerRef = useRef(null);
   const explosionRef = useRef(null);
   const isRemoved = useRef(false); // 🚨 new guard flag
+  useEffect(() => {
+    if (mapRef.current) {
+      mapRef.current.resize();
+    }
+  }, []);
 
   const { state } = useAppContext();
   const { impactArea } = state;
@@ -79,6 +85,17 @@ export default function EarthVisualization() {
       bearing: 0,
       pitch: 0,
       interactive: false,
+      scaleControl: false,
+      customControls: false,
+      terrainControl: false,
+      navigationControl: false,
+      geolocateControl: false,
+      projectionControl: false,
+      showZoom: false,
+      showCompass: false,   
+      showGeolocation: false,
+      navigationControl: false,
+      
     });
 
     mapRef.current = map;
@@ -121,18 +138,38 @@ export default function EarthVisualization() {
       }
     };
   }, []);
+  const canvasRef = useRef(null);
+
+  useEffect(() => {
+    if (mapRef.current) {
+      const canvas = mapRef.current.getCanvas(); // <- gets .maplibregl-canvas
+      canvas.width = 800;  // internal pixel width
+      canvas.height = 600; // internal pixel height
+      canvas.style.width = "800px";  // DOM width
+      canvas.style.height = "600px"; // DOM height
+      mapRef.current.resize(); // important!
+    }
+  }, []);
+
+
 
   useEffect(() => {
     if (!mapRef.current || !impactArea) return;
     addMarker(impactArea);
     showImpact(impactArea);
   }, [impactArea]);
+  useEffect(() => {
+    const handleResize = () => {
+      if (mapRef.current) mapRef.current.resize();
+    };
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   return (
-    <div
-      ref={mapContainer}
-      className="real-map-container"
-      style={{ width: "50vw", height: "80vh", position: "relative" }}
-    />
+    <div className="earth-map-wrapper">
+      <div ref={mapContainer} className="real-map-container-1" />
+    </div>
+
   );
 }

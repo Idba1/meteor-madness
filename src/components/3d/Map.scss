@@ -1,7 +1,35 @@
 .real-map-container {
-    position: relative;
+    width: 100%;
+    /* Should be 100% of its parent (.earth-map-wrapper) */
+    height: 600px;
+    /* Explicitly set the desired height for the map */
+}
+
+/* Ensure the MapLibre/MapTiler canvas fills the container completely */
+.maplibregl-canvas {
     width: 100% !important;
-    height: 400px !important;
+    height: 100% !important;
+}
+
+/* The .earth-map-wrapper should also have a context for its 100% width */
+.earth-map-wrapper {
+    /* Assuming this is inside a column/grid item */
+    width: 100%;
+    height: 100%;
+    /* Or a fixed height, depending on the layout */
+}
+
+.maplibregl-canvas {
+    width: 100% !important; // canvas scales with container
+    height: 100% !important;
+}
+
+
+
+.real-map-container-1 {
+    position: relative;
+    width: 100%;
+    height: 100%;
     align-items: flex-start;
     border-radius: 20px;
 
@@ -28,6 +56,9 @@
         height: 0 !important;
         overflow: hidden !important;
     }
+
+
+
 
     // Hide any logo by background image or content
     div[style*="background-image"]:not(.maplibregl-canvas-container) {
