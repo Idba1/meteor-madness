@@ -444,8 +444,8 @@ export default function RealMap({ resetTrigger, selectedLocation, selectedAstero
             className="real-map-container"
             style={{
                 width: "50vw",
-                height: "80vh",
-                alignItems: "flex-start"
+                height: "100vh",
+
             }}
         />
     );

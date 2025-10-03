@@ -1,8 +1,11 @@
 .real-map-container {
     position: relative;
     width: 100%;
-    height: 600px;
-    align-items: center;
+    height: 73%;
+    min-height: 73vh;
+    display: flex;
+    align-items: stretch;
+
 
     // Hide MapTiler logo and attribution completely
     .maplibregl-ctrl-logo,
@@ -34,7 +37,7 @@
     }
 
     // Additional logo hiding - target by content
-    a:contains("MapTiler"), 
+    a:contains("MapTiler"),
     div:contains("MapTiler") {
         display: none !important;
     }
@@ -59,22 +62,22 @@
         position: absolute;
         width: 40px;
         height: 40px;
-        background: radial-gradient(ellipse at center, 
-            #ffff00 0%,
-            #ff8c00 15%, 
-            #ff4500 35%,
-            #ff0000 55%,
-            #8b0000 75%,
-            #000000 100%);
+        background: radial-gradient(ellipse at center,
+                #ffff00 0%,
+                #ff8c00 15%,
+                #ff4500 35%,
+                #ff0000 55%,
+                #8b0000 75%,
+                #000000 100%);
         border-radius: 60% 40%;
         transform-origin: center;
-        box-shadow: 
+        box-shadow:
             0 0 25px #ff6a00,
             0 0 45px #ff3d00,
             0 0 65px rgba(255, 106, 0, 0.6),
             0 0 85px rgba(255, 61, 0, 0.4);
         animation: meteor-glow 0.15s ease-in-out infinite alternate;
-        
+
         &::before {
             content: '';
             position: absolute;
@@ -82,14 +85,14 @@
             right: 100%;
             width: 200px;
             height: 12px;
-            background: linear-gradient(90deg, 
-                rgba(255, 255, 0, 0) 0%,
-                rgba(255, 255, 0, 0.2) 10%,
-                rgba(255, 140, 0, 0.5) 25%,
-                rgba(255, 69, 0, 0.8) 45%,
-                rgba(255, 0, 0, 0.9) 70%,
-                #ff4500 90%,
-                #ff8c00 100%);
+            background: linear-gradient(90deg,
+                    rgba(255, 255, 0, 0) 0%,
+                    rgba(255, 255, 0, 0.2) 10%,
+                    rgba(255, 140, 0, 0.5) 25%,
+                    rgba(255, 69, 0, 0.8) 45%,
+                    rgba(255, 0, 0, 0.9) 70%,
+                    #ff4500 90%,
+                    #ff8c00 100%);
             border-radius: 6px;
             transform: translateY(-50%);
             animation: flame-flicker 0.08s ease-in-out infinite alternate;
@@ -104,12 +107,12 @@
             width: 300px;
             height: 6px;
             background: linear-gradient(90deg,
-                rgba(255, 255, 102, 0) 0%,
-                rgba(255, 255, 102, 0.3) 15%,
-                rgba(255, 179, 102, 0.6) 35%,
-                rgba(255, 140, 0, 0.8) 60%,
-                rgba(255, 69, 0, 0.9) 80%,
-                #ffb366 100%);
+                    rgba(255, 255, 102, 0) 0%,
+                    rgba(255, 255, 102, 0.3) 15%,
+                    rgba(255, 179, 102, 0.6) 35%,
+                    rgba(255, 140, 0, 0.8) 60%,
+                    rgba(255, 69, 0, 0.9) 80%,
+                    #ffb366 100%);
             border-radius: 3px;
             transform: translateY(-50%);
             animation: spark-trail 0.12s ease-in-out infinite alternate;
@@ -140,28 +143,35 @@
         height: 220px;
         border-radius: 50%;
         background: radial-gradient(circle,
-            rgba(255,255,255,1) 0%,
-            rgba(255,255,0,0.95) 10%,
-            rgba(255,140,0,0.85) 30%,
-            rgba(255,69,0,0.8) 55%,
-            rgba(255,0,0,0.7) 75%,
-            rgba(139,37,0,0.5) 90%,
-            rgba(0,0,0,0.1) 100%
-        );
+                rgba(255, 255, 255, 1) 0%,
+                rgba(255, 255, 0, 0.95) 10%,
+                rgba(255, 140, 0, 0.85) 30%,
+                rgba(255, 69, 0, 0.8) 55%,
+                rgba(255, 0, 0, 0.7) 75%,
+                rgba(139, 37, 0, 0.5) 90%,
+                rgba(0, 0, 0, 0.1) 100%);
         transform: translate(-50%, -50%);
         box-shadow:
-            0 0 120px 40px rgba(255,255,0,0.7),
-            0 0 180px 80px rgba(255,140,0,0.5),
-            0 0 240px 120px rgba(255,69,0,0.3);
+            0 0 120px 40px rgba(255, 255, 0, 0.7),
+            0 0 180px 80px rgba(255, 140, 0, 0.5),
+            0 0 240px 120px rgba(255, 69, 0, 0.3);
         z-index: 20;
         pointer-events: none;
-        animation: explosion-pulse 2s cubic-bezier(.5,0,.5,1) infinite;
+        animation: explosion-pulse 2s cubic-bezier(.5, 0, .5, 1) infinite;
     }
 
     @keyframes explosion-pulse {
-        0% { box-shadow: 0 0 120px 40px rgba(255,255,0,0.7), 0 0 180px 80px rgba(255,140,0,0.5), 0 0 240px 120px rgba(255,69,0,0.3); }
-        50% { box-shadow: 0 0 180px 80px rgba(255,255,0,0.9), 0 0 240px 120px rgba(255,140,0,0.7), 0 0 320px 160px rgba(255,69,0,0.5); }
-        100% { box-shadow: 0 0 120px 40px rgba(255,255,0,0.7), 0 0 180px 80px rgba(255,140,0,0.5), 0 0 240px 120px rgba(255,69,0,0.3); }
+        0% {
+            box-shadow: 0 0 120px 40px rgba(255, 255, 0, 0.7), 0 0 180px 80px rgba(255, 140, 0, 0.5), 0 0 240px 120px rgba(255, 69, 0, 0.3);
+        }
+
+        50% {
+            box-shadow: 0 0 180px 80px rgba(255, 255, 0, 0.9), 0 0 240px 120px rgba(255, 140, 0, 0.7), 0 0 320px 160px rgba(255, 69, 0, 0.5);
+        }
+
+        100% {
+            box-shadow: 0 0 120px 40px rgba(255, 255, 0, 0.7), 0 0 180px 80px rgba(255, 140, 0, 0.5), 0 0 240px 120px rgba(255, 69, 0, 0.3);
+        }
     }
 
     .impact-debris {
@@ -173,27 +183,39 @@
         left: 50%;
         top: 50%;
         transform-origin: left center;
-        animation: debris-fly 1.5s cubic-bezier(.5,0,.5,1) infinite;
+        animation: debris-fly 1.5s cubic-bezier(.5, 0, .5, 1) infinite;
     }
 
     @keyframes debris-fly {
-        0% { opacity: 1; transform: scaleX(1) rotate(0deg); }
-        50% { opacity: 0.7; transform: scaleX(2.5) rotate(0deg); }
-        100% { opacity: 1; transform: scaleX(1) rotate(0deg); }
+        0% {
+            opacity: 1;
+            transform: scaleX(1) rotate(0deg);
+        }
+
+        50% {
+            opacity: 0.7;
+            transform: scaleX(2.5) rotate(0deg);
+        }
+
+        100% {
+            opacity: 1;
+            transform: scaleX(1) rotate(0deg);
+        }
     }
 
     // Keyframe animations
     @keyframes meteor-glow {
-        0% { 
-            box-shadow: 
+        0% {
+            box-shadow:
                 0 0 25px #ff6a00,
                 0 0 45px #ff3d00,
                 0 0 65px rgba(255, 106, 0, 0.6),
                 0 0 85px rgba(255, 61, 0, 0.4);
             transform: scale(1);
         }
-        100% { 
-            box-shadow: 
+
+        100% {
+            box-shadow:
                 0 0 35px #ff8c00,
                 0 0 55px #ff4500,
                 0 0 75px rgba(255, 140, 0, 0.8),
@@ -203,13 +225,14 @@
     }
 
     @keyframes flame-flicker {
-        0% { 
+        0% {
             opacity: 0.8;
             width: 200px;
             height: 12px;
             box-shadow: 0 0 20px rgba(255, 69, 0, 0.6);
         }
-        100% { 
+
+        100% {
             opacity: 1;
             width: 250px;
             height: 16px;
@@ -218,13 +241,14 @@
     }
 
     @keyframes spark-trail {
-        0% { 
+        0% {
             opacity: 0.6;
             width: 300px;
             height: 6px;
             box-shadow: 0 0 15px rgba(255, 179, 102, 0.4);
         }
-        100% { 
+
+        100% {
             opacity: 0.9;
             width: 350px;
             height: 8px;
@@ -237,12 +261,15 @@
             transform: translateY(-150px) translateX(-100px) rotate(-45deg);
             opacity: 0;
         }
+
         10% {
             opacity: 1;
         }
+
         90% {
             opacity: 1;
         }
+
         100% {
             transform: translateY(0) translateX(0) rotate(-45deg);
             opacity: 0.9;
@@ -254,10 +281,12 @@
             transform: scale(1) rotate(-45deg);
             opacity: 0.9;
         }
+
         50% {
             transform: scale(1.8) rotate(-45deg);
             opacity: 0.6;
         }
+
         100% {
             transform: scale(0) rotate(-45deg);
             opacity: 0;
@@ -269,14 +298,17 @@
             transform: translate(-50%, -50%) scale(0);
             opacity: 1;
         }
+
         20% {
             transform: translate(-50%, -50%) scale(1.2);
             opacity: 0.9;
         }
+
         50% {
             transform: translate(-50%, -50%) scale(2);
             opacity: 0.7;
         }
+
         100% {
             transform: translate(-50%, -50%) scale(4);
             opacity: 0;
