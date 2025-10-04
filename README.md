@@ -2,19 +2,25 @@
 
 A React.js frontend application for asteroid impact simulation, built with NASA's NEO (Near-Earth Object) data. This educational tool provides interactive visualizations, scientific simulations, and comprehensive impact analysis.
 
-# Project Links
+## Project Links
 
-- **30-Second Video (Global Submission)**: https://youtu.be/xuDei3eb9hY
-  
-- **240-Second Video (Local Submission)**: https://youtu.be/gKMp6jRGYG8
+- **30-Second Video (Global Submission)**: <a href="https://youtu.be/xuDei3eb9hY" target="_blank">https://youtu.be/xuDei3eb9hY
+</a>
 
-- **Live Project**: https://meteor-madness-alpha.vercel.app/
+- **240-Second Video (Local Submission)**: <a href="https://youtu.be/gKMp6jRGYG8" target="_blank">https://youtu.be/gKMp6jRGYG8
+</a>
 
-- **Source Code**: https://github.com/Idba1/meteor-madness
+- **Live Project**: <a href="https://meteor-madness-alpha.vercel.app/" target="_blank">https://meteor-madness-alpha.vercel.app/
+</a>
 
-- **Documentation**: https://docs.google.com/document/d/1oNkJomuj0Ya6wAOFs6EtIY8ITTV4zoKO9KAK8h55V80/edit
-  
-- **Presentation Slide**: https://www.canva.com/design/DAG0tD9C-hg/VqJi9tlBaaGIQgyoiU3gQQ/view
+- **Source Code**: <a href="https://github.com/Idba1/meteor-madness" target="_blank">https://github.com/Idba1/meteor-madness
+</a>
+
+- **Documentation**: <a href="https://docs.google.com/document/d/1oNkJomuj0Ya6wAOFs6EtIY8ITTV4zoKO9KAK8h55V80/edit" target="_blank">https://docs.google.com/document/d/1oNkJomuj0Ya6wAOFs6EtIY8ITTV4zoKO9KAK8h55V80/edit
+</a>
+
+- **Presentation Slide**: <a href="https://www.canva.com/design/DAG0tD9C-hg/VqJi9tlBaaGIQgyoiU3gQQ/view" target="_blank">https://www.canva.com/design/DAG0tD9C-hg/VqJi9tlBaaGIQgyoiU3gQQ/view
+</a>
 
 
 ## 🚀 Features
